@@ -1,6 +1,14 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
+
+/*
+<App>
+  <LayoutContainer>
+    <CameraList>
+    <VideoList>
+  </LayoutContainer>
+</App>
+*/
 
 class App extends Component {
   render() {
