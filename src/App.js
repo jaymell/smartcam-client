@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
+import LayoutContainer from "./LayoutContainer";
 
 /*
 <App>
@@ -12,6 +13,7 @@ import './App.css';
 
 class App extends Component {
   render() {
+    return (<LayoutContainer/>)
   }
 }
 
