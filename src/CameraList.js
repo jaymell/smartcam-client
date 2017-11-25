@@ -6,7 +6,10 @@ class CameraList extends Component {
     return (
       <div>
         {this.props.cameras.map(camera =>
-          <Camera cameraClickEvent={this.props.cameraClickEvent} key={camera.camera_id} cameraId={camera.camera_id}/>
+          <Camera cameraClickEvent={this.props.cameraClickEvent}
+                  key={camera.camera_id}
+                  cameraId={camera.camera_id}
+          />
         )}
       </div>
     );

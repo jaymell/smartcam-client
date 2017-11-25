@@ -8,7 +8,9 @@ class Camera extends Component {
 
   render() {
     return (
-      <div><p onClick={this.onClick}>{this.props.cameraId}</p></div>
+      <div>
+        <p onClick={this.onClick}>{this.props.cameraId}</p>
+      </div>
     )
   }
 }
