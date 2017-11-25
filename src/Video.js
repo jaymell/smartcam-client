@@ -4,7 +4,7 @@ class Video extends Component {
   constructor(props) {
     super(props);
 
-    this.displayDate = new Date(this.props.start);
+    this.displayDate = new Date(this.props.video.start);
   }
 
   formatDate = (date) => {
@@ -17,7 +17,13 @@ class Video extends Component {
 
   render() {
     return (
-      <div><p> "Video {this.formatDate(this.displayDate)}" </p></div>
+      <div>
+        <video width={this.props.video.width}
+               height={this.props.video.height}
+               controls>
+          <source src={this.props.video.url} type="video/mp4"></source>
+        </video>
+      </div>
     )
   }
 }

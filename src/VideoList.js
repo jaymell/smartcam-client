@@ -11,7 +11,9 @@ class VideoList extends Component {
     return (
       <div>
         {this.props.videos.map(video =>
-          <Video key={video.start} start={video.start}/>
+          <Video key={video.start}
+                 video={video}
+          />
         )}
       </div>
     );
