@@ -5,9 +5,9 @@ import VideoList from './VideoList';
 
 const API = 'http://localhost:8080';
 
-const handleApiError = (e, route) => {
+const handleApiError = (e) => {
   if (!e.status) {
-    console.error(`Network error -- route: ${route}`);
+    console.error(`Network error: ${e}`);
   } else {
     console.error("Error: ", e);
   }
@@ -18,7 +18,13 @@ class LayoutContainer extends Component {
   constructor() {
     super();
     this.api = API;
-    this.state = { cameras: [], activeCamera: null, videos: [], apiError: false };
+    this.state = {
+      cameras: [],
+      activeCamera: null,
+      videos: [],
+      detections: [],
+      apiError: false,
+      fromTime: 1 };
   }
 
   async componentWillMount() {
@@ -26,21 +32,30 @@ class LayoutContainer extends Component {
     try {
       const cameras = await axios.get(route);
       console.log('cameras! ', cameras.data);
-      this.setState({ cameras: cameras.data.result });
+      this.setState({
+        cameras: cameras.data.result,
+        apiError: false });
     } catch(e) {
-      this.setState(handleApiError(e, route));
+      this.setState(handleApiError(e));
     }
 
   }
 
   selectCamera = async(cameraId) => {
-    let route = `${this.api}/cameras/${cameraId}/videos?from=1`;
+    let videoRoute = `${this.api}/cameras/${cameraId}/videos?from=${this.state.fromTime}`;
+    let detectionRoute = `${this.api}/cameras/${cameraId}/detections?from=${this.state.fromTime}`;
     try {
-      const videos = await axios.get(route);
+      const [ videos, detections ] = await Promise.all(
+        [ axios.get(videoRoute), axios.get(detectionRoute) ]);
       console.log('videos! ', videos.data);
-      this.setState({ activeCamera: cameraId, videos: videos.data.result });
+      console.log('detections! ', detections.data);
+      this.setState({
+        activeCamera: cameraId,
+        videos: videos.data.result,
+        detections: detections.data.result,
+        apiError: false });
     } catch (e) {
-      this.setState(handleApiError(e, route));
+      this.setState(handleApiError(e));
     }
   }
 
@@ -52,7 +67,9 @@ class LayoutContainer extends Component {
     }
     return (
       <div>
-        <CameraList cameras={this.state.cameras} cameraClickEvent={this.selectCamera}/>
+        <CameraList cameras={this.state.cameras}
+                    detections={this.state.detections}
+                    cameraClickEvent={this.selectCamera}/>
         <VideoList videos={this.state.videos} />
       </div>
     );

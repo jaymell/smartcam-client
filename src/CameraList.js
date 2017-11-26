@@ -5,6 +5,7 @@ class CameraList extends Component {
   render() {
     return (
       <div>
+        <p>{this.props.detections}</p>
         {this.props.cameras.map(camera =>
           <Camera cameraClickEvent={this.props.cameraClickEvent}
                   key={camera.camera_id}
