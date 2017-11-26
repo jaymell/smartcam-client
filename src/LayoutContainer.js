@@ -68,9 +68,9 @@ class LayoutContainer extends Component {
     return (
       <div>
         <CameraList cameras={this.state.cameras}
-                    detections={this.state.detections}
                     cameraClickEvent={this.selectCamera}/>
-        <VideoList videos={this.state.videos} />
+        <VideoList videos={this.state.videos}
+                   detections={this.state.detections}/>
       </div>
     );
   }
