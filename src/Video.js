@@ -23,6 +23,7 @@ class Video extends Component {
                controls>
           <source src={this.props.video.url} type="video/mp4"></source>
         </video>
+        {this.props.detections.map(it => <p>{it}</p>)}
       </div>
     )
   }
