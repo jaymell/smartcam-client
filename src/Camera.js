@@ -9,7 +9,7 @@ class Camera extends Component {
   render() {
     return (
       <div>
-        <p onClick={this.onClick}>{this.props.cameraId}</p>
+        <p onClick={this.onClick} style={{cursor: "pointer"}}>{this.props.cameraId}</p>
       </div>
     )
   }

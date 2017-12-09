@@ -18,12 +18,15 @@ class Video extends Component {
   render() {
     return (
       <div>
+        <p>{new Date(this.props.video.start).toString()}</p>
         <video width={this.props.video.width}
                height={this.props.video.height}
+               preload="none"
+               poster=""
                controls>
           <source src={this.props.video.url} type="video/mp4"></source>
         </video>
-        {this.props.detections.map(it => <p>{it}</p>)}
+        {this.props.detections.map(it => <p key={it}>{it}</p>)}
       </div>
     )
   }

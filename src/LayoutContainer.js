@@ -14,6 +14,11 @@ const handleApiError = (e) => {
   return {apiError: true};
 }
 
+const nMinsAgo = (n) => {
+  const t = new Date();
+  return t.setMinutes(t.getMinutes() - n);
+};
+
 class LayoutContainer extends Component {
   constructor() {
     super();
