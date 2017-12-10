@@ -13,6 +13,7 @@ class VideoList extends Component {
   constructor(props) {
     super(props);
   }
+
   render() {
     if (this.props.videos.length === 0) {
       return (

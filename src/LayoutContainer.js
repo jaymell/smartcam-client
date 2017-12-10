@@ -3,8 +3,6 @@ import axios from 'axios';
 import CameraList from './CameraList';
 import VideoList from './VideoList';
 
-const API = 'http://localhost:8080';
-
 const handleApiError = (e) => {
   if (!e.status) {
     console.error(`Network error: ${e}`);
@@ -20,9 +18,9 @@ const nMinsAgo = (n) => {
 };
 
 class LayoutContainer extends Component {
-  constructor() {
-    super();
-    this.api = API;
+  constructor(props) {
+    super(props);
+    this.api = this.props.apiUrl;
     this.state = {
       cameras: [],
       activeCamera: null,
