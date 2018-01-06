@@ -1,5 +1,6 @@
 import { combine } from '../src/VideoList.js';
 import * as assert from 'assert';
+import 'babel-polyfill';
 
 const video1 = {
   "camera_id": "1",
@@ -72,7 +73,7 @@ describe('combine', () => {
       { video: video2, detections: ["alpha", "gamma", "delta", "beta" ] }
     ];
     const actual = combine(videos, detections);
-    console.log("ACTUAL: ", actual);
+    // console.log("ACTUAL: ", actual);
     assert.deepEqual(expected, actual);
   });
 });

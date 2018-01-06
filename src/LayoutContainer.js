@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import CameraList from './CameraList';
 import VideoList from './VideoList';
+import { isUndefined, concat } from 'lodash';
+
 
 const handleApiError = (e) => {
   if (!e.status) {
@@ -10,10 +12,10 @@ const handleApiError = (e) => {
     console.error("Error: ", e);
   }
   return {apiError: true};
-}
+};
 
-const nMinsAgo = (n) => {
-  const t = new Date();
+export const nMinsAgo = (n, date) => {
+  const t = isUndefined(date) ? new Date() : new Date(date.getTime());
   return t.setMinutes(t.getMinutes() - n);
 };
 
@@ -27,7 +29,26 @@ class LayoutContainer extends Component {
       videos: [],
       detections: [],
       apiError: false,
-      fromTime: 1 };
+      fromTime: nMinsAgo(500),
+      toTime: nMinsAgo(0) };
+  }
+
+  async getCameraData(cameraId) {
+    let videoRoute = `${this.api}/cameras/${cameraId}/videos?from=${this.state.fromTime}&to=${this.state.toTime}`;
+    let detectionRoute = `${this.api}/cameras/${cameraId}/detections?from=${this.state.fromTime}&to=${this.state.toTime}`;
+    try {
+      const [ videos, detections ] = await Promise.all(
+        [ axios.get(videoRoute), axios.get(detectionRoute) ]);
+      console.log('videos! ', videos.data);
+      console.log('detections! ', detections.data);
+      this.setState({
+        activeCamera: cameraId,
+        videos: concat(this.state.videos, videos.data.result),
+        detections: concat(this.state.detections, detections.data.result),
+        apiError: false });
+    } catch (e) {
+      this.setState(handleApiError(e));
+    }
   }
 
   async componentWillMount() {
@@ -41,25 +62,10 @@ class LayoutContainer extends Component {
     } catch(e) {
       this.setState(handleApiError(e));
     }
-
   }
 
-  selectCamera = async(cameraId) => {
-    let videoRoute = `${this.api}/cameras/${cameraId}/videos?from=${this.state.fromTime}`;
-    let detectionRoute = `${this.api}/cameras/${cameraId}/detections?from=${this.state.fromTime}`;
-    try {
-      const [ videos, detections ] = await Promise.all(
-        [ axios.get(videoRoute), axios.get(detectionRoute) ]);
-      console.log('videos! ', videos.data);
-      console.log('detections! ', detections.data);
-      this.setState({
-        activeCamera: cameraId,
-        videos: videos.data.result,
-        detections: detections.data.result,
-        apiError: false });
-    } catch (e) {
-      this.setState(handleApiError(e));
-    }
+  selectCamera = cameraId => {
+    return this.getCameraData(cameraId);
   }
 
   render() {
