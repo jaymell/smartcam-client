@@ -5,6 +5,18 @@ import VideoList from './VideoList';
 import { isUndefined, concat } from 'lodash';
 
 
+// const updateCamera = (cameraObj, cameraId, videos, detections) => {
+//   if(isUndefined(cameraObj)) {
+//     cameraObj = { videos: videos, detections: detections }
+//   } else {
+//     cameraObj = {
+//       ...cameraObj.cameraId.videos, videos,
+//       ...cameraObj.cameraId.detections, detections
+//     }
+//   }
+//   return cameraObj
+// }
+
 const handleApiError = (e) => {
   if (!e.status) {
     console.error(`Network error: ${e}`);
@@ -25,9 +37,9 @@ class LayoutContainer extends Component {
     this.api = this.props.apiUrl;
     this.state = {
       cameras: [],
-      activeCamera: null,
       videos: [],
       detections: [],
+      activeCamera: null,
       apiError: false,
       fromTime: nMinsAgo(500),
       toTime: nMinsAgo(0) };
@@ -39,19 +51,23 @@ class LayoutContainer extends Component {
     try {
       const [ videos, detections ] = await Promise.all(
         [ axios.get(videoRoute), axios.get(detectionRoute) ]);
+
       console.log('videos! ', videos.data);
       console.log('detections! ', detections.data);
+
       this.setState({
         activeCamera: cameraId,
         videos: concat(this.state.videos, videos.data.result),
         detections: concat(this.state.detections, detections.data.result),
         apiError: false });
+
     } catch (e) {
       this.setState(handleApiError(e));
     }
   }
 
   async componentWillMount() {
+    console.log('componentWillMount!!!')
     let route = `${this.api}/cameras`;
     try {
       const cameras = await axios.get(route);
@@ -78,8 +94,8 @@ class LayoutContainer extends Component {
       <div>
         <CameraList cameras={this.state.cameras}
                     cameraClickEvent={this.selectCamera}/>
-        <VideoList videos={this.state.videos}
-                   detections={this.state.detections}/>
+        <VideoList videos={ this.state.videos.filter( i => i.camera_id === this.state.activeCamera )}
+                   detections={ this.state.detections.filter( i => i.camera_id === this.state.activeCamera )}/>
       </div>
     );
   }
